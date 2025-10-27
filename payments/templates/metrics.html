@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Métricas de Pagos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #38bdf8;
+        }
+        canvas {
+            max-width: 600px;
+            margin: 30px auto;
+            display: block;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resumen de Pagos</h1>
+    <canvas id="metricsChart" width="400" height="200"></canvas>
+
+    <script>
+fetch('/payments/metrics/overview/')
+  .then(response => response.json())
+  .then(data => {
+    const ctx = document.getElementById('metricsChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Aprobados', 'Rechazados', 'Pendientes'],
+        datasets: [{
+          label: 'Pagos',
+          data: [
+            data.pagos_aprobados,
+            data.pagos_rechazados,
+            data.pagos_pendientes
+          ],
+          backgroundColor: ['#4CAF50', '#F44336', '#FFC107']
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  })
+  .catch(error => console.error('Error al cargar métricas:', error));
+</script>
+
+</body>
+</html>
